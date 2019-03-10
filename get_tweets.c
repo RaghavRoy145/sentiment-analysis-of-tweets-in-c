@@ -32,10 +32,20 @@ int tweets_get()
     char *signature = malloc(buf_size);
     if (signature == NULL) return 1;
 
-    char consumer_key[64] = "oNTQbAtR4Es7Ewk80PIFAd1rQ";
-    char consumer_secret[64] = "c49TIQTQ4ayJvkEenQ09mc7Uo6MyF7jfkuJTRRo6i2XDknoTjG";
-    char access_token[64] = "2679666494-HIEIqzucuO9zU2FHvp0lyppaLAsXGxs9jkmqhe9";
-    char access_token_secret[64] = "HaomhOvKMVEiyMOSde0WiFVuO35pi13Zi3sawzTTHAMHi";
+    FILE *keys = fopen("keys", "r"); int len = 64;
+    char *consumer_key = malloc(64);
+    char *consumer_secret = malloc(64);
+    char *access_token = malloc(64);
+    char *access_token_secret = malloc(64);
+    fgets(consumer_key, len, keys); consumer_key[strcspn(consumer_key, "\n")] = 0;
+    fgets(consumer_secret, len, keys); consumer_secret[strcspn(consumer_secret, "\n")] = 0;
+    fgets(access_token, len, keys); access_token[strcspn(access_token, "\n")] = 0;
+    fgets(access_token_secret, len, keys); access_token_secret[strcspn(access_token_secret, "\n")] = 0;
+    // fscanf(keys, "%[^\n]", consumer_key);
+    // fscanf(keys, "%[^\n]", consumer_secret);
+    // fscanf(keys, "%[^\n]", access_token);
+    // fscanf(keys, "%[^\n]", access_token_secret);
+    // printf("\"%s\"", consumer_secret);
 
     char *hmac_key = malloc(buf_size);
     if (hmac_key == NULL) return 1;
