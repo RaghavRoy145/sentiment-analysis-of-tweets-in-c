@@ -1,2 +1,2 @@
-sentiment-analysis-of-tweets-in-c
-Sentimeny analysis
+Sentiment analysis of Tweets in Pure C
+Uses curl, ssh libraries
