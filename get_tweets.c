@@ -41,11 +41,7 @@ int tweets_get()
     fgets(consumer_secret, len, keys); consumer_secret[strcspn(consumer_secret, "\n")] = 0;
     fgets(access_token, len, keys); access_token[strcspn(access_token, "\n")] = 0;
     fgets(access_token_secret, len, keys); access_token_secret[strcspn(access_token_secret, "\n")] = 0;
-    // fscanf(keys, "%[^\n]", consumer_key);
-    // fscanf(keys, "%[^\n]", consumer_secret);
-    // fscanf(keys, "%[^\n]", access_token);
-    // fscanf(keys, "%[^\n]", access_token_secret);
-    // printf("\"%s\"", consumer_secret);
+    fclose(keys);
 
     char *hmac_key = malloc(buf_size);
     if (hmac_key == NULL) return 1;
