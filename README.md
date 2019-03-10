@@ -1,2 +1,3 @@
 Sentiment analysis of Tweets in Pure C
-Uses curl, ssh libraries
+
+Requires libcurl, openssl libraries (only for getting tweets)
