@@ -12,12 +12,12 @@ make -f makefile.mk
 ## Usage
 
 * Save your Twitter API keys in file names `keys` in this format:
-```bash
-Consumer Key
-Consumer Secret
-Access Token
-Access Token Secret
-```
+    ```bash
+    Consumer Key
+    Consumer Secret
+    Access Token
+    Access Token Secret
+    ```
 
 * Run `./get_tweets.out` to get Tweets from the Twitter API and save the json output to `output.json`
 * Run `./parse_output.out` and enter the maximun number of tweets required. This will parse the `output.json` file and extract some number of tweets from it.
