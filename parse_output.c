@@ -5,6 +5,7 @@
 #include "mylibs.h"
 #include "analyse_sentiment.h"
 #define wordlength 128
+#define linelength 10000
 
 void extract_required(char *tweet_text, char *tweet);
 void deleteChars(char *s, char c);
@@ -16,15 +17,15 @@ int main()
 {
     // Open output.json file to read
     FILE *fptr;
-    size_t len = 10000;
+    size_t len = linelength;
     fptr = fopen("output.json", "r");
-    char *tmp = malloc(sizeof(char) * 10000);
+    char *tmp = malloc(sizeof(char) * linelength);
     // Get maximum number of tweets to extract from user
     int n;
     printf("Enter maximum number of tweets to extract: ");
     scanf("%d", &n);
     char tweet_texts[n][100000], tweet_usernames[n][1000];
-    char tweets[n][10000], usernames[n][100];
+    char tweets[n][linelength], usernames[n][100];
     char *text_start = NULL, *text_end = NULL;
     char *username_start = NULL, *username_end = NULL;
     int i = 0;
@@ -63,15 +64,15 @@ int main()
     double sentiment[155287];
     int l = 0;
     len = 100;
-    tmp = malloc(100);
-    while((getline(&tmp, &len, sentiwordsfile)) != -1) // while(i < n && (getline(&tmp, &len, sentiwordsfile)) != -1)
+    char *tmp2 = malloc(100);
+    while((getline(&tmp2, &len, sentiwordsfile)) != -1) // while(i < n && (getline(&tmp, &len, sentiwordsfile)) != -1)
     {
-        strcpy(sentiwords[l], strtok(tmp, "\t"));
+        strcpy(sentiwords[l], strtok(tmp2, "\t"));
         sscanf(strtok(NULL, "\n"), "%lf", &sentiment[l]);
         ++l;
     }
     fclose(sentiwordsfile);
-    if(tmp) free(tmp);
+    if(tmp2) free(tmp2);
 
     //printf("%s\n", tweet_text);
     //printf("%s\n", tweet_username);
@@ -88,7 +89,7 @@ int main()
         if(words == NULL || words[0] == NULL) continue;
         else if(words != NULL)
         {
-            printf("%d\n", count);
+            // printf("%d\n", count);
             printf("Username: @%s\n", usernames[j]);
             printf("Tweet: ");
             k = 0;
