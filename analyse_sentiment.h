@@ -1,0 +1,1 @@
+double sentiment_analyse(char **words, int n, char **sentiwords, double *sentiment);

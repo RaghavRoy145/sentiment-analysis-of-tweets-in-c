@@ -3,10 +3,14 @@
 #include <string.h>
 #include <locale.h>
 #include "mylibs.h"
+#include "analyse_sentiment.h"
+#define wordlength 128
+
 void extract_required(char *tweet_text, char *tweet);
 void deleteChars(char *s, char c);
-int deleteWord(char *s, char *word);
+int deleteWord(char *str, char *rem);
 char **processTweet(char *tweet);
+int deleteWordn(char *s, char *word, int len);
 
 int main()
 {
@@ -52,6 +56,23 @@ int main()
         return 0;
     }
 
+    int size = 155287;
+    FILE *sentiwordsfile = fopen("SentiWords_1.1.txt", "r");
+    char **sentiwords = malloc(size * sizeof(char*));
+    for(int i = 0; i < size; ++i) sentiwords[i] = malloc(wordlength * sizeof(char));
+    double sentiment[155287];
+    int l = 0;
+    len = 100;
+    tmp = malloc(100);
+    while((getline(&tmp, &len, sentiwordsfile)) != -1) // while(i < n && (getline(&tmp, &len, sentiwordsfile)) != -1)
+    {
+        strcpy(sentiwords[l], strtok(tmp, "\t"));
+        sscanf(strtok(NULL, "\n"), "%lf", &sentiment[l]);
+        ++l;
+    }
+    fclose(sentiwordsfile);
+    if(tmp) free(tmp);
+
     //printf("%s\n", tweet_text);
     //printf("%s\n", tweet_username);
     char **words, *word;
@@ -61,11 +82,14 @@ int main()
     for(int j=0; j < i; ++j)
     {
         extract_required(tweet_texts[j], tweets[j]);
+        extract_required(tweet_usernames[j], usernames[j]);
         // printf("Tweet: %s\n", tweets[j]);
         words = processTweet(tweets[j]);
         if(words == NULL || words[0] == NULL) continue;
         else if(words != NULL)
         {
+            printf("%d\n", count);
+            printf("Username: @%s\n", usernames[j]);
             printf("Tweet: ");
             k = 0;
             while((word = words[k]) != NULL)
@@ -75,14 +99,18 @@ int main()
                 ++k;
             }
             printf("\n");
+            printf("Sentiment: %lf\n\n", sentiment_analyse(words, k, sentiwords, sentiment));
             ++count;
-            free(words);
+            for(int j = 0; j <= k; ++j){ if(words[j]) free(words[j]); }
+            if(words) free(words);
         }
         // printf("Tweet: %s\n", tweets[j]);
-        extract_required(tweet_usernames[j], usernames[j]);
-        printf("Username: @%s\n", usernames[j]);
+        // extract_required(tweet_usernames[j], usernames[j]);
+        // printf("Username: @%s\n\n", usernames[j]);
     }
     printf("%d tweets found.\n", count);
+    for(int j = 0; j < size; ++j){ if(sentiwords[j]) free(sentiwords[j]); }
+    if(sentiwords) free(sentiwords);
     return 0;
 }
 
@@ -113,32 +141,112 @@ void deleteChars(char *s, char c)
     s[writer]=0;
 }
 
-int deleteWord(char *s, char *word)
+// int deleteWord(char *s, char *word)
+// {
+//     char *substr = strstr(s, word);
+//     if(substr == NULL) return -1;
+//     char *lenptr = substr;
+//     int len = 0, i = 0;
+//     while(*lenptr && *lenptr != ' ')
+//     {
+//         lenptr++;
+//         len++;
+//     }
+//     while(*(substr+len+1+i))
+//     {
+//         *(substr+i) = *(substr+len+1+i);
+//         ++i;
+//     }
+//     *(s+i) = '\0';
+//     return 0;
+// }
+
+// int deleteWordn(char *s, char *word, int len)
+// {
+//     char *substr = strstr(s, word);
+//     if(substr == NULL) return -1;
+//     int i = 0;
+//     // while(*lenptr && *lenptr != ' ')
+//     // {
+//     //     lenptr++;
+//     //     len++;
+//     // }
+//     while(*(substr+len+1+i))
+//     {
+//         *(substr+i) = *(substr+len+1+i);
+//         ++i;
+//     }
+//     *(substr+i) = '\0';
+//     return 0;
+// }
+
+int deleteWord(char *str, char *rem)
 {
-    char *substr = strstr(s, word);
-    if(substr == NULL) return -1;
-    char *lenptr = substr;
-    int len = 0, i = 0;
-    while(*lenptr && *lenptr != ' ')
+    char *tmp2 = malloc(strlen(str) + 2);
+    strcpy(tmp2, str);
+    char *substr = strstr(tmp2, rem);
+    if(substr == NULL)
     {
-        lenptr++;
-        len++;
+        if(tmp2) free(tmp2);
+        return -1;
     }
-    while(*(substr+len+1+i))
+    char *toRemove = strtok(substr, " ");
+    if(toRemove == NULL) toRemove = strtok(substr, "\0");
+    int i, j, stringLen, toRemoveLen;
+    int found;
+    if(tmp2) free(tmp2);
+
+    stringLen   = strlen(str);      // Length of string
+    toRemoveLen = strlen(toRemove); // Length of word to remove
+
+
+    for(i=0; i <= stringLen - toRemoveLen; i++)
     {
-        *(s+i) = *(substr+len+1+i);
-        ++i;
+        /* Match word with string */
+        found = 1;
+        for(j=0; j<toRemoveLen; j++)
+        {
+            if(str[i + j] != toRemove[j])
+            {
+                found = 0;
+                break;
+            }
+        }
+
+        /* If it is not a word */
+        // if(str[i + j] != ' ' && str[i + j] != '\t' && str[i + j] != '\n' && str[i + j] != '\0') 
+        // {
+        //     found = 0;
+        // }
+
+        /*
+         * If word is found then shift all characters to left
+         * and decrement the string length
+         */
+        if(found == 1)
+        {
+            for(j=i; j<=stringLen - toRemoveLen; j++)
+            {
+                str[j] = str[j + toRemoveLen];
+            }
+
+            stringLen = stringLen - toRemoveLen;
+
+            // We will match next occurrence of word from current index.
+            i--;
+        }
     }
-    *(s+i) = '\0';
     return 0;
 }
 
 char **processTweet(char *tweet)
 {
     if(strlen(tweet) < 5) return NULL;
-    char *result = (char *) malloc(sizeof(char) * strlen(tweet)), *tmp;
-    char stopwords[][32] = {"i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "you're", "you've", "you'll", "you'd", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it"};
-    char punctuation[] = ".!,'?()/~_-\\:[]{}";
+    // printf("Tweeeeeeeet: %s\n", tweet);
+    char *result = malloc(sizeof(char) * strlen(tweet)), *tmp;
+    // char stopwords[][32] = {"i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "you're", "you've", "you'll", "you'd", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it"};
+    // char stopwords[][32] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
+    char punctuation[] = ".!,'?()/~_-:[]{}#";
     strcpy(result, tweet);
     
     // to lowercase
@@ -148,24 +256,26 @@ char **processTweet(char *tweet)
     //remove link
     // tmp = strstr(result, "https:");
     // if(tmp != NULL) *tmp = '\0';
-    deleteWord(result, "http");
-    deleteWord(result, "rt");
-    deleteWord(result, "@");
+    //// deleteWord(result, "http");
+    // deleteWord(result, "rt");
+    //// deleteWord(result, "@");
+    // deleteWord(result, "$");
+    // deleteWordn(result, "\\n", 2);
 
     //remove punctuatuon symbols
-    for(int i = 0; i < strlen(punctuation); ++i)
-    {
-        deleteChars(result, punctuation[i]);
-    }
+    //// for(int i = 0; i < strlen(punctuation); ++i)
+    //// {
+    ////     deleteChars(result, punctuation[i]);
+    //// }
     // separate words into a array of strings
-    char **words = (char **) malloc(sizeof(char) * strlen(tweet) * 2);
+    char **words = malloc(sizeof(char) * strlen(tweet) * 2);
     char *p;
     int i = 0;
-    words[i] = (char *) malloc(64);
+    words[i] = malloc(wordlength);
     p = strtok(result, " ");
     while(p != NULL)
     {
-        words[i] = (char *) malloc(64);
+        words[i] = malloc(wordlength);
         strcpy(words[i], p);
         i++;
         p = strtok(NULL, " ");
@@ -175,35 +285,41 @@ char **processTweet(char *tweet)
     // words[i+1] = NULL;
     // remove stopwords
     // i = 0;
-    int a = 0;
-    int k = 0;
-    char **words2 = (char **) malloc(sizeof(char) * strlen(tweet) * 2);
-    while(a < i)
+
+    // int a = 0;
+    // int k = 0;
+    // char **words2 = (char **) malloc(sizeof(char) * strlen(tweet) * 2);
+    // while(a < i)
+    // {
+    //     for(int j = 0; j < 26; ++j)
+    //     {
+    //         if(strcmp(words[a], stopwords[j]) != 0)
+    //         {
+    //             words2[k] = (char *) malloc(strlen(words[a])+1);
+    //             if(k==0)
+    //             {
+    //                 strcpy(words2[k], words[a]);
+    //                 ++k;
+    //             }
+    //             else if(strcmp(words[a], words2[k-1]) != 0)
+    //             {
+    //                 strcpy(words2[k], words[a]);
+    //                 ++k;
+    //             }
+    //         }
+    //     }
+    //     ++a;
+    // }
+    // words2[i] = NULL;
+    // free(words);
+    if(result) free(result);
+    if(i>2) return words;
+    else
     {
-        for(int j = 0; j < 26; ++j)
-        {
-            if(strcmp(words[a], stopwords[j]) != 0)
-            {
-                words2[k] = (char *) malloc(strlen(words[a])+1);
-                if(k==0)
-                {
-                    strcpy(words2[k], words[a]);
-                    ++k;
-                }
-                else if(strcmp(words[a], words2[k-1]) != 0)
-                {
-                    strcpy(words2[k], words[a]);
-                    ++k;
-                }
-            }
-        }
-        ++a;
+        for(int j = 0; j < i; ++j) if(words[j]) free(words[j]);
+        if(words) free(words);
+        return NULL;
     }
-    words2[i] = NULL;
-    free(words);
-    free(result);
-    if(i>3) return words2;
-    else return NULL;
     // return words2;
 }
 // end 
