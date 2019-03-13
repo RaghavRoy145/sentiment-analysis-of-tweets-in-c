@@ -10,7 +10,7 @@
 void extract_required(char *tweet_text, char *tweet);
 void deleteChars(char *s, char c);
 int deleteWord(char *str, char *rem);
-char **processTweet(char *tweet);
+char **processTweet(char *tweet, int *n);
 int deleteWordn(char *s, char *word, int len);
 
 int main()
@@ -77,7 +77,7 @@ int main()
     //printf("%s\n", tweet_text);
     //printf("%s\n", tweet_username);
     char **words, *word;
-    int k = 0;
+    int k = 0, n2 = 0;
     int count = 0;
     // Extract only tweet and process it
     for(int j=0; j < i; ++j)
@@ -85,7 +85,7 @@ int main()
         extract_required(tweet_texts[j], tweets[j]);
         extract_required(tweet_usernames[j], usernames[j]);
         // printf("Tweet: %s\n", tweets[j]);
-        words = processTweet(tweets[j]);
+        words = processTweet(tweets[j], &n2);
         if(words == NULL || words[0] == NULL) continue;
         else if(words != NULL)
         {
@@ -102,7 +102,7 @@ int main()
             printf("\n");
             printf("Sentiment: %lf\n\n", sentiment_analyse(words, k, sentiwords, sentiment));
             ++count;
-            for(int j = 0; j <= k; ++j){ if(words[j]) free(words[j]); }
+            for(int j = 0; j <= n2; ++j){ if(words[j]) free(words[j]); }
             if(words) free(words);
         }
         // printf("Tweet: %s\n", tweets[j]);
@@ -240,7 +240,7 @@ int deleteWord(char *str, char *rem)
     return 0;
 }
 
-char **processTweet(char *tweet)
+char **processTweet(char *tweet, int *n)
 {
     if(strlen(tweet) < 5) return NULL;
     // printf("Tweeeeeeeet: %s\n", tweet);
@@ -313,6 +313,7 @@ char **processTweet(char *tweet)
     // }
     // words2[i] = NULL;
     // free(words);
+    *n = i;
     if(result) free(result);
     if(i>2) return words;
     else
