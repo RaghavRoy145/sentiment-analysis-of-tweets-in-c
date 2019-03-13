@@ -1,6 +1,6 @@
 # Sentiment Analysis of Tweets in C
 
-This C program gets tweets, processes the output and, in the future, performs basic sentiment analysis on it.
+This C program gets tweets, processes the output and performs basic sentiment analysis on it.
 
 ## Compiling
 
