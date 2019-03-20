@@ -2,17 +2,38 @@
 #include <stdlib.h>
 #include <string.h>
 #include "analyse_sentiment.h"
+#define datasize 155287
+
+int binary_search(char **sentiwords, char *word)
+{
+    int low = 0, high = datasize, mid, res;
+    while(low <= high)
+    {
+        mid = (low+high)/2;
+        res = strcmp(word, sentiwords[mid]);
+        if(res == 0) return mid;
+        else if(res > 0)
+        {
+            low = mid + 1;
+        }
+        else if(res < 0)
+        {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
 
 double sentiment_analyse(char **words, int n, char **sentiwords, double *sentiment)
 {
-    int size = 155287;
+    // int datasize = 155287;
     // FILE *fptr = fopen("SentiWords_1.1.txt", "r");
-    // char **sentiwords = (char**) malloc(size * sizeof(char*));
-    // for(int i = 0; i < size; ++i) sentiwords[i] = malloc(64 * sizeof(char));
+    // char **sentiwords = (char**) malloc(datasize * datasizeof(char*));
+    // for(int i = 0; i < datasize; ++i) sentiwords[i] = malloc(64 * datasizeof(char));
     // double sentiment[155287];
 
     // int i = 0;
-    // size_t len = 100;
+    // datasize_t len = 100;
     // char *tmp = malloc(100);
     // while((getline(&tmp, &len, fptr)) != -1) // while(i < n && (getline(&tmp, &len, fptr)) != -1)
     // {
@@ -26,21 +47,33 @@ double sentiment_analyse(char **words, int n, char **sentiwords, double *sentime
     // free(tmp);
 
     int i = 0;
+    int bin;
     double total_sentiment = 0.0;
     while(i < n && strcmp(words[i], ""))
     {
         // printf("%s\n", words[i]);
-        for(int j = 0; j < size; ++j)
+        // 
+        // linear search
+        // for(int j = 0; j < datasize; ++j)
+        // {
+        //     if(strcmp(words[i], sentiwords[j]) == 0)
+        //     {
+        //         // printf("%s: %lf\n", words[i], sentiment[j]);
+        //         total_sentiment += sentiment[j];
+        //     }
+        // }
+        // 
+        // Binary search
+        bin = binary_search(sentiwords, words[i]);
+        if(bin != -1)
         {
-            if(strcmp(words[i], sentiwords[j]) == 0)
-            {
-                // printf("%s: %lf\n", words[i], sentiment[j]);
-                total_sentiment += sentiment[j];
-            }
+            // printf("Word:%s Binary search:%d Sentiment:%lf\n", words[i], bin, sentiment[bin]);
+            total_sentiment += sentiment[bin];
         }
+        // 
         ++i;
     }
-    // for(int j = 0; j < size; ++j) free(sentiwords[j]);
+    // for(int j = 0; j < datasize; ++j) free(sentiwords[j]);
     // free(sentiwords);
     return total_sentiment;
 }

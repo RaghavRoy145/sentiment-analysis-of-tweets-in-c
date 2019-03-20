@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <time.h>
 #include "mylibs.h"
 #include "analyse_sentiment.h"
 #define wordlength 128
@@ -15,6 +16,7 @@ int deleteWordn(char *s, char *word, int len);
 
 int main()
 {
+    time_t start = clock();
     // Open output.json file to read
     FILE *fptr;
     size_t len = linelength;
@@ -58,7 +60,7 @@ int main()
     }
 
     int size = 155287;
-    FILE *sentiwordsfile = fopen("SentiWords_1.1.txt", "r");
+    FILE *sentiwordsfile = fopen("SentiWords_Sorted.txt", "r");
     char **sentiwords = malloc(size * sizeof(char*));
     for(int i = 0; i < size; ++i) sentiwords[i] = malloc(wordlength * sizeof(char));
     double sentiment[155287];
@@ -112,6 +114,12 @@ int main()
     printf("%d tweets found.\n", count);
     for(int j = 0; j < size; ++j){ if(sentiwords[j]) free(sentiwords[j]); }
     if(sentiwords) free(sentiwords);
+    time_t end = clock();
+    double totaltime = (double) (end - start) / CLOCKS_PER_SEC;
+    printf("Time taken: %lfs\n", totaltime);
+    // int ex = 0;
+    // while(ex != 1)
+    //     scanf("%d", &ex);
     return 0;
 }
 
@@ -200,7 +208,6 @@ int deleteWord(char *str, char *rem)
     stringLen   = strlen(str);      // Length of string
     toRemoveLen = strlen(toRemove); // Length of word to remove
 
-
     for(i=0; i <= stringLen - toRemoveLen; i++)
     {
         /* Match word with string */
@@ -213,29 +220,34 @@ int deleteWord(char *str, char *rem)
                 break;
             }
         }
-
-        /* If it is not a word */
-        // if(str[i + j] != ' ' && str[i + j] != '\t' && str[i + j] != '\n' && str[i + j] != '\0') 
-        // {
-        //     found = 0;
-        // }
-
-        /*
-         * If word is found then shift all characters to left
-         * and decrement the string length
-         */
         if(found == 1)
         {
             for(j=i; j<=stringLen - toRemoveLen; j++)
             {
                 str[j] = str[j + toRemoveLen];
             }
-
             stringLen = stringLen - toRemoveLen;
-
-            // We will match next occurrence of word from current index.
             i--;
         }
+    }
+    return 0;
+}
+
+int delete_word(char str[], char word[])
+{
+    int i, l;
+    char *ptr = strstr(str, word);
+    int index = 0;
+    if(ptr != NULL) 
+        index = str - strstr(str, word);
+    else
+        return -1;
+    // for (l = 0; word[l] != '\0'; l++);
+    l = strlen(word);
+
+    for (i = index; str[i] != '\0'; i++)
+    {
+        str[i] = str[i + l + 1];
     }
     return 0;
 }
@@ -257,17 +269,18 @@ char **processTweet(char *tweet, int *n)
     //remove link
     // tmp = strstr(result, "https:");
     // if(tmp != NULL) *tmp = '\0';
-    //// deleteWord(result, "http");
+    // deleteWord(result, "http");
     // deleteWord(result, "rt");
     //// deleteWord(result, "@");
     // deleteWord(result, "$");
     // deleteWordn(result, "\\n", 2);
+    delete_word(result, "\n");
 
     //remove punctuatuon symbols
-    //// for(int i = 0; i < strlen(punctuation); ++i)
-    //// {
-    ////     deleteChars(result, punctuation[i]);
-    //// }
+    for(int i = 0; i < strlen(punctuation); ++i)
+    {
+        deleteChars(result, punctuation[i]);
+    }
     // separate words into a array of strings
     char **words = malloc(sizeof(char) * strlen(tweet) * 2);
     char *p;
@@ -315,7 +328,7 @@ char **processTweet(char *tweet, int *n)
     // free(words);
     *n = i;
     if(result) free(result);
-    if(i>2) return words;
+    if(i>3) return words;
     else
     {
         for(int j = 0; j < i; ++j) if(words[j]) free(words[j]);
@@ -324,4 +337,3 @@ char **processTweet(char *tweet, int *n)
     }
     // return words2;
 }
-// end 
