@@ -14,3 +14,7 @@ analyse_sentiment.h.gch
 .vscode/settings.json
 a.out.dSYM/Contents/Info.plist
 extract_test.c
+SentiWords_Sorted.txt
+dataset_test.py
+memusg.sh
+.vscode/c_cpp_properties.json
