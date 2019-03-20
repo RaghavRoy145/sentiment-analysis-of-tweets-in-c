@@ -3,6 +3,7 @@
 #include <string.h>
 #include <curl/curl.h>
 #include "mylibs.h"
+#include "get_tweets.h"
 
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
 {
@@ -14,7 +15,7 @@ size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-int tweets_get()
+int tweets_get(long timeout)
 {
     int buf_size = 20000;
     time_t t = time(NULL);
@@ -69,17 +70,11 @@ int tweets_get()
         chunk = curl_slist_append(chunk, post);
         curl_easy_setopt(curl, CURLOPT_URL, "https://stream.twitter.com/1.1/statuses/sample.json");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         // Send curl request
         curl_easy_perform(curl);
         curl_easy_cleanup(curl);
     }
-    return 0;
-}
-
-int main()
-{
-    tweets_get();
     return 0;
 }
