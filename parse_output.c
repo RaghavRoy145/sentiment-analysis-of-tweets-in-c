@@ -5,6 +5,7 @@
 #include <time.h>
 #include "mylibs.h"
 #include "analyse_sentiment.h"
+#include "get_tweets.h"
 #define wordlength 128
 #define linelength 10000
 
@@ -14,7 +15,7 @@ int deleteWord(char *str, char *rem);
 char **processTweet(char *tweet, int *n);
 int deleteWordn(char *s, char *word, int len);
 
-int main()
+int extract_analyse_tweets(int n)
 {
     time_t start = clock();
     // Open output.json file to read
@@ -23,9 +24,9 @@ int main()
     fptr = fopen("output.json", "r");
     char *tmp = malloc(sizeof(char) * linelength);
     // Get maximum number of tweets to extract from user
-    int n;
-    printf("Enter maximum number of tweets to extract: ");
-    scanf("%d", &n);
+    // int n;
+    // printf("Enter maximum number of tweets to extract: ");
+    // scanf("%d", &n);
     char tweet_texts[n][100000], tweet_usernames[n][1000];
     char tweets[n][linelength], usernames[n][100];
     char *text_start = NULL, *text_end = NULL;
@@ -81,6 +82,7 @@ int main()
     char **words, *word;
     int k = 0, n2 = 0;
     int count = 0;
+    double senti = 0;
     // Extract only tweet and process it
     for(int j=0; j < i; ++j)
     {
@@ -91,19 +93,22 @@ int main()
         if(words == NULL || words[0] == NULL) continue;
         else if(words != NULL)
         {
-            // printf("%d\n", count);
-            printf("Username: @%s\n", usernames[j]);
-            printf("Tweet: ");
             k = 0;
             while((word = words[k]) != NULL)
             {
-                // if(strcmp(word, "") == 0) continue;
-                printf("%s ", word);
                 ++k;
             }
-            printf("\n");
-            printf("Sentiment: %lf\n\n", sentiment_analyse(words, k, sentiwords, sentiment));
-            ++count;
+            senti = sentiment_analyse(words, k, sentiwords, sentiment);
+            if(senti != 0.0)
+            {
+                printf("Username: @%s\n", usernames[j]);
+                printf("Tweet: ");
+                while((word = words[k]) != NULL)
+                    printf("%s ", word);
+                printf("\n");
+                printf("Sentiment: %lf\n\n", senti);
+                ++count;
+            }
             for(int j = 0; j <= n2; ++j){ if(words[j]) free(words[j]); }
             if(words) free(words);
         }
