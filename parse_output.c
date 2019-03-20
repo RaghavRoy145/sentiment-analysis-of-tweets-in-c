@@ -23,10 +23,6 @@ int extract_analyse_tweets(int n)
     size_t len = linelength;
     fptr = fopen("output.json", "r");
     char *tmp = malloc(sizeof(char) * linelength);
-    // Get maximum number of tweets to extract from user
-    // int n;
-    // printf("Enter maximum number of tweets to extract: ");
-    // scanf("%d", &n);
     char tweet_texts[n][100000], tweet_usernames[n][1000];
     char tweets[n][linelength], usernames[n][100];
     char *text_start = NULL, *text_end = NULL;
@@ -77,8 +73,6 @@ int extract_analyse_tweets(int n)
     fclose(sentiwordsfile);
     if(tmp2) free(tmp2);
 
-    //printf("%s\n", tweet_text);
-    //printf("%s\n", tweet_username);
     char **words, *word;
     int k = 0, n2 = 0;
     int count = 0;
@@ -112,9 +106,6 @@ int extract_analyse_tweets(int n)
             for(int j = 0; j <= n2; ++j){ if(words[j]) free(words[j]); }
             if(words) free(words);
         }
-        // printf("Tweet: %s\n", tweets[j]);
-        // extract_required(tweet_usernames[j], usernames[j]);
-        // printf("Username: @%s\n\n", usernames[j]);
     }
     printf("%d tweets found.\n", count);
     for(int j = 0; j < size; ++j){ if(sentiwords[j]) free(sentiwords[j]); }
@@ -122,9 +113,6 @@ int extract_analyse_tweets(int n)
     time_t end = clock();
     double totaltime = (double) (end - start) / CLOCKS_PER_SEC;
     printf("Time taken: %lfs\n", totaltime);
-    // int ex = 0;
-    // while(ex != 1)
-    //     scanf("%d", &ex);
     return 0;
 }
 
@@ -154,45 +142,6 @@ void deleteChars(char *s, char c)
 
     s[writer]=0;
 }
-
-// int deleteWord(char *s, char *word)
-// {
-//     char *substr = strstr(s, word);
-//     if(substr == NULL) return -1;
-//     char *lenptr = substr;
-//     int len = 0, i = 0;
-//     while(*lenptr && *lenptr != ' ')
-//     {
-//         lenptr++;
-//         len++;
-//     }
-//     while(*(substr+len+1+i))
-//     {
-//         *(substr+i) = *(substr+len+1+i);
-//         ++i;
-//     }
-//     *(s+i) = '\0';
-//     return 0;
-// }
-
-// int deleteWordn(char *s, char *word, int len)
-// {
-//     char *substr = strstr(s, word);
-//     if(substr == NULL) return -1;
-//     int i = 0;
-//     // while(*lenptr && *lenptr != ' ')
-//     // {
-//     //     lenptr++;
-//     //     len++;
-//     // }
-//     while(*(substr+len+1+i))
-//     {
-//         *(substr+i) = *(substr+len+1+i);
-//         ++i;
-//     }
-//     *(substr+i) = '\0';
-//     return 0;
-// }
 
 int deleteWord(char *str, char *rem)
 {
