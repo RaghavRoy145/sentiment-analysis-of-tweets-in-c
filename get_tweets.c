@@ -5,6 +5,8 @@
 #include "mylibs.h"
 #include "get_tweets.h"
 
+int count = 0;
+
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
 {
     // Write to output file
@@ -12,6 +14,7 @@ size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
     fptr = fopen("output.json", "a");
     fprintf(fptr,"%s", buffer);
     fclose(fptr);
+    count++;
     return size * nmemb;
 }
 
@@ -76,5 +79,6 @@ int tweets_get(long timeout)
         curl_easy_perform(curl);
         curl_easy_cleanup(curl);
     }
+    printf("Got %d lines\n", count);
     return 0;
 }
