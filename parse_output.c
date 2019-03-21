@@ -8,6 +8,14 @@
 #include "get_tweets.h"
 #define wordlength 128
 #define linelength 10000
+#define RED   "\x1B[31m"
+#define GRN   "\x1B[32m"
+#define YEL   "\x1B[33m"
+#define BLU   "\x1B[34m"
+#define MAG   "\x1B[35m"
+#define CYN   "\x1B[36m"
+#define WHT   "\x1B[37m"
+#define RESET "\x1B[0m"
 
 void extract_required(char *tweet_text, char *tweet);
 void deleteChars(char *s, char c);
@@ -97,10 +105,11 @@ int extract_analyse_tweets(int n)
             {
                 printf("Username: @%s\n", usernames[j]);
                 printf("Tweet: ");
-                while((word = words[k]) != NULL)
-                    printf("%s ", word);
+                for(int b = 0; b < k; ++b)
+                    printf("%s ", words[b]);
                 printf("\n");
-                printf("Sentiment: %lf\n\n", senti);
+                if(senti > 0.0) printf("Sentiment: " BLU "Positive (%.3lf)\n\n" RESET, senti);
+                else if(senti < 0.0) printf("Sentiment: " RED "Negative (%.3lf)\n\n" RESET, senti);
                 ++count;
             }
             for(int j = 0; j <= n2; ++j){ if(words[j]) free(words[j]); }
