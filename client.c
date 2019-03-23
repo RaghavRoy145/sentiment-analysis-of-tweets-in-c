@@ -4,7 +4,7 @@
 
 int main()
 {
-    int get = 2;
+    int get;
     long timeout = 10L;
     int n = 0;
     do

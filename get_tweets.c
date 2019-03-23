@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 #include "mylibs.h"
 #include "get_tweets.h"
+size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp);
 
 int count = 0;
 

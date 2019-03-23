@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include "mylibs.h"
 
-int buf_size = 20000;
+size_t buf_size = 20000;
 
 int need_percent_encoding(char c)
 {
