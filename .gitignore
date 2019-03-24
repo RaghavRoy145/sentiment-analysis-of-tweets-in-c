@@ -18,3 +18,4 @@ SentiWords_Sorted.txt
 dataset_test.py
 memusg.sh
 .vscode/*
+trainingandtestdata
