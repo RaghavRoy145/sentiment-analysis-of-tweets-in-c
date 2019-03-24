@@ -21,8 +21,9 @@ int main()
                 tweets_get(timeout);
                 break;
             case 2:
-                printf("Enter maximum number of tweets to extract: ");
+                printf("Enter number of lines to parse: ");
                 scanf("%d", &n);
+                // n = 2;
                 extract_analyse_tweets(n);
                 break;
             default:

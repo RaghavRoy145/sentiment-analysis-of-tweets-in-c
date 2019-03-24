@@ -24,7 +24,7 @@ int binary_search(char **sentiwords, char *word)
     return -1;
 }
 
-double sentiment_analyse(char **words, int n, char **sentiwords, double *sentiment)
+double sentiment_analyse(char words[20][wordlength], int n, char **sentiwords, double *sentiment)
 {
     // int datasize = 155287;
     // FILE *fptr = fopen("SentiWords_1.1.txt", "r");
@@ -49,7 +49,7 @@ double sentiment_analyse(char **words, int n, char **sentiwords, double *sentime
     int i = 0;
     int bin;
     double total_sentiment = 0.0;
-    while(i < n && strcmp(words[i], "") && words[i] != NULL)
+    while(i < n && strcmp(words[i], "") != 0 && words[i] != NULL && strlen(words[i]) > 3)
     {
         // printf("%s\n", words[i]);
         // 

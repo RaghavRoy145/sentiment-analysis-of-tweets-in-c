@@ -19,6 +19,12 @@ size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
+int progress_callback(void *clientp,   curl_off_t dltotal,   curl_off_t dlnow,   curl_off_t ultotal,   curl_off_t ulnow)
+{
+    if(count > 200) return -1;
+    else return 0;
+}
+
 int tweets_get(long timeout)
 {
     int buf_size = 20000;
@@ -75,7 +81,9 @@ int tweets_get(long timeout)
         curl_easy_setopt(curl, CURLOPT_URL, "https://stream.twitter.com/1.1/statuses/sample.json");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
         curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+        curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
         // Send curl request
         curl_easy_perform(curl);
         curl_easy_cleanup(curl);
