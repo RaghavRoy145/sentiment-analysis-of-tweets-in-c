@@ -20,26 +20,18 @@ int main()
         switch (get)
         {
             case 1:
-                printf("Please wait %ld seconds\n", timeout);
+                printf("Please wait...\n");
                 tweets_get(timeout);
                 break;
             case 2:
                 printf("Enter number of lines to parse: ");
                 scanf("%d", &n);
-                // n = 2;
                 extract_analyse_tweets(n, fp);
-                // do
-                // {
-                //     printf("Do you want to continue? (0 for no, 1 for yes): ");
-                //     scanf("%d", &readmore);
-                //     if(readmore) extract_analyse_tweets(n, fp);
-                // } while (readmore != 0);
-                fclose(fp);
                 break;
             default:
                 break;
         }
     } while (get != 0);
-    
+    fclose(fp);
     return 0;
 }
