@@ -21,8 +21,8 @@ size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp)
 
 int progress_callback(void *clientp,   curl_off_t dltotal,   curl_off_t dlnow,   curl_off_t ultotal,   curl_off_t ulnow)
 {
-    if(count > 200) return -1;
-    else return 0;
+    // if(count > 200) return -1;
+    return 0;
 }
 
 int tweets_get(long timeout)

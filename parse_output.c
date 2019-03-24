@@ -24,14 +24,14 @@ char **processTweet(char *tweet, int *n, char *result, char words[20][wordlength
 int deleteWordn(char *s, char *word, int len);
 int count_substr(char *str, char *find, int n);
 
-int extract_analyse_tweets(int n)
+int extract_analyse_tweets(int n, FILE *fptr)
 {
     time_t start = clock();
     // Open output.json file to read
-    FILE *fptr;
+    // FILE *fptr;
     size_t len = 0;//linelength;
-    fptr = fopen("output.json", "r");
-    if(fptr == NULL) return 0;
+    // fptr = fopen("output.json", "r");
+    // if(fptr == NULL) return 0;
     char *tmp = NULL; //malloc(sizeof(char) * linelength);
     char tweet_texts[n][5000], tweet_usernames[n][256];
     char tweets[n][linelength], usernames[n][128];
@@ -64,7 +64,7 @@ int extract_analyse_tweets(int n)
         if(tmp) free(tmp);
         tmp = NULL;
     }
-    fclose(fptr);
+    // fclose(fptr);
     // if(tmp) free(tmp);
 
     // print if no tweet is extracted
@@ -98,7 +98,6 @@ int extract_analyse_tweets(int n)
     fclose(sentiwordsfile);
     // if(tmp2) free(tmp2);
 
-    char *word;
     int k = 0, n2 = 0;
     char **res2 = NULL;
     int count = 0;
@@ -123,14 +122,14 @@ int extract_analyse_tweets(int n)
             //     ++k;
             // }
             senti = sentiment_analyse(words, k, sentiwords, sentiment);
-            if(senti != 0.0)
+            if(1)// if(senti != 0.0)
             {
                 printf("Username: @%s\n", usernames[j]);
                 printf("Tweet: ");
                 for(int b = 0; b < k; ++b)
                     printf("%s ", words[b]);
                 printf("\n");
-                printf("Original Tweet: %s\n", tweets[j]);
+                // printf("Original Tweet: %s\n", tweets[j]);
                 if(senti > 0.0) printf("Sentiment: " BLU "Positive (%.3lf)\n\n" RESET, senti);
                 else if(senti < 0.0) printf("Sentiment: " RED "Negative (%.3lf)\n\n" RESET, senti);
                 else printf("Sentiment: " GRN "Neutral (%.3lf)\n\n" RESET, senti);
@@ -153,7 +152,7 @@ int extract_analyse_tweets(int n)
 
 int count_substr(char *str, char *find, int n)
 {
-    int count = 0, find_len = strlen(find), i = 0;
+    int count = 0, find_len = strlen(find);
     char *tmp = str;
     if(find_len == 0) return 0;
     while((tmp = strnstr(tmp, find, n)))
@@ -319,11 +318,11 @@ char **processTweet(char *tweet, int *n, char *result, char words[20][wordlength
             break;
     }
 
-    while(1)
-    {
-        if(deleteWord(result, "@") == -1)
-            break;
-    }
+    // while(1)
+    // {
+    //     if(deleteWord(result, "@") == -1)
+    //         break;
+    // }
     
     // deleteWord(result, "rt");
     //// deleteWord(result, "@");

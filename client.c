@@ -7,6 +7,9 @@ int main()
     int get;
     long timeout = 10L;
     int n = 0;
+    int readmore = 0;
+    FILE *fp = fopen("output.json", "r");
+    if(fp == NULL) return -1;
     do
     {
         printf("Select option:\n");
@@ -24,7 +27,14 @@ int main()
                 printf("Enter number of lines to parse: ");
                 scanf("%d", &n);
                 // n = 2;
-                extract_analyse_tweets(n);
+                extract_analyse_tweets(n, fp);
+                // do
+                // {
+                //     printf("Do you want to continue? (0 for no, 1 for yes): ");
+                //     scanf("%d", &readmore);
+                //     if(readmore) extract_analyse_tweets(n, fp);
+                // } while (readmore != 0);
+                fclose(fp);
                 break;
             default:
                 break;

@@ -1,1 +1,1 @@
-int extract_analyse_tweets(int n);
+int extract_analyse_tweets(int n, FILE *fptr);

@@ -49,7 +49,7 @@ double sentiment_analyse(char words[20][wordlength], int n, char **sentiwords, d
     int i = 0;
     int bin;
     double total_sentiment = 0.0;
-    while(i < n && strcmp(words[i], "") != 0 && words[i] != NULL && strlen(words[i]) > 3)
+    while(i < n)// && strcmp(words[i], "") != 0) //&& words[i] != NULL && strlen(words[i]) > 3)
     {
         // printf("%s\n", words[i]);
         // 
