@@ -22,6 +22,7 @@ int main()
             case 1:
                 printf("Please wait...\n");
                 tweets_get(timeout);
+                fp = fopen("output.json", "r");
                 break;
             case 2:
                 printf("Enter number of lines to parse: ");
