@@ -47,10 +47,10 @@ int tweets_get(long timeout)
 
     // Get Twitter API keys from file 'keys'
     FILE *keys = fopen("keys", "r"); int len = 64;
-    char *consumer_key = malloc(64);
-    char *consumer_secret = malloc(64);
-    char *access_token = malloc(64);
-    char *access_token_secret = malloc(64);
+    char consumer_key[len];
+    char consumer_secret[len];
+    char access_token[len];
+    char access_token_secret[len];
     fgets(consumer_key, len, keys); consumer_key[strcspn(consumer_key, "\n")] = 0;
     fgets(consumer_secret, len, keys); consumer_secret[strcspn(consumer_secret, "\n")] = 0;
     fgets(access_token, len, keys); access_token[strcspn(access_token, "\n")] = 0;
