@@ -7,7 +7,7 @@ This C program gets tweets, processes the output and performs basic sentiment an
 Run make to compile and generate .out file.
 
 ```bash
-make -f makeclient.mk
+make
 ```
 ## Usage
 
