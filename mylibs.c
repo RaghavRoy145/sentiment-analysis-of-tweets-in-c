@@ -110,11 +110,12 @@ unsigned char *hmac_sha1_encode(const char *data, const char *hmac_key,
     HMAC_CTX *ctx;
 
     /* Example from http://stackoverflow.com/a/245335. */
-    HMAC_CTX_reset(&ctx);
-    HMAC_Init_ex(&ctx, hmac_key, (int)strlen(hmac_key), EVP_sha1(), NULL);
-    HMAC_Update(&ctx, (const unsigned char *)data, strlen(data));
-    HMAC_Final(&ctx, result, result_len);
-    HMAC_CTX_free(&ctx);
+    ctx = HMAC_CTX_new();
+    HMAC_CTX_reset(ctx);
+    HMAC_Init_ex(ctx, hmac_key, (int)strlen(hmac_key), EVP_sha1(), NULL);
+    HMAC_Update(ctx, (const unsigned char *)data, strlen(data));
+    HMAC_Final(ctx, result, result_len);
+    HMAC_CTX_free(ctx);
 
     return result;
 }
