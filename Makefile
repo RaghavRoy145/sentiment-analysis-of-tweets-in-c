@@ -1,3 +1,5 @@
+CC?=gcc
+
 src = $(wildcard *.c)
 obj = $(src:.c=.o)
 
@@ -16,4 +18,3 @@ debug: $(obj)
 
 clean:
 	rm -f ./*.o ./sentiment
-	    
