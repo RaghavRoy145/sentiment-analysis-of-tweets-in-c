@@ -3,10 +3,6 @@ language: c
 compiler:
   - clang
   - gcc
-env:
-    matrix:
-      - CC="gcc"
-      - CC="clang"
 addons:
   homebrew:
     packages:
