@@ -3,6 +3,10 @@ language: c
 compiler:
   - clang
   - gcc
+env:
+    matrix:
+      - CC="gcc"
+      - CC="clang"
 addons:
   homebrew:
     packages:
@@ -12,4 +16,8 @@ before_install:
   - export LDFLAGS="$LDFLAGS -L/usr/local/opt/openssl@1.1/lib"
   - export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openssl@1.1/include"
 script:
+  - make clean
   - make
+  - make clean
+  - export CC="$CC -g"
+  - make debug
