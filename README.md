@@ -1,5 +1,7 @@
 # Sentiment Analysis of Tweets in C
 
+[![Build Status](https://travis-ci.com/Samyak2/sentiment-analysis-of-tweets-in-c.svg?branch=master)](https://travis-ci.com/Samyak2/sentiment-analysis-of-tweets-in-c)
+
 This C program gets tweets, processes the output and performs basic sentiment analysis on it.
 
 ## Requirements
